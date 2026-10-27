@@ -1,0 +1,9 @@
+{
+  "id": "xbox",
+  "name": "Xbox and Game Pass",
+  "author": "Tessera",
+  "version": "0.1.0",
+  "description": "Which ways of playing Xbox and Game Pass games this machine can do (on Linux, in the cloud, streamed, in a Windows VM, or Windows on its own drive), what each still needs, and Xbox Cloud Gaming in one press.",
+  "entry": "index.js",
+  "tessera": { "api": 1 }
+}

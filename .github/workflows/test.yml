@@ -1,0 +1,23 @@
+---
+# Tests, and checks that tools/lib is Tessera's own code and every add-on packs under Tessera's rules.
+name: Test
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tessera's launcher (for its packing and signature code)
+        run: git clone --depth 1 https://github.com/Herbalchemist/tessera /tmp/tessera
+      - name: Tests
+        run: node --test test/*.test.js
+      - name: Checks
+        run: node tools/check.cjs /tmp/tessera/system_files/usr/lib/tessera/launcher

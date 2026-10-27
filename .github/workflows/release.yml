@@ -1,0 +1,57 @@
+---
+# Packs every add-on, publishes a release <id>-v<version> for each new version, and commits the
+# catalog.json Tessera reads. A version is released once: if an add-on's files changed but its
+# version didn't, this stops and says so (bump the version).
+name: Release add-ons
+on:
+  push:
+    branches: [main]
+    paths: ['addons/**', 'tools/**', '.github/workflows/release.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: release-addons
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tests
+        run: node --test test/*.test.js
+      - name: Pack
+        run: node tools/build.cjs
+      - name: Publish new versions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node -e 'const {build}=require("./tools/build.cjs"); for (const a of build().addons) console.log([a.tag, a.file, a.sha256].join(" "))' > /tmp/packages
+          while read -r tag file sha; do
+            name=$(basename "$file")
+            if gh release view "$tag" >/dev/null 2>&1; then
+              rm -rf /tmp/have && mkdir -p /tmp/have
+              gh release download "$tag" -p "$name" -D /tmp/have
+              have=$(sha256sum "/tmp/have/$name" | cut -d' ' -f1)
+              if [ "$have" != "$sha" ]; then
+                echo "::error::$tag is already released with different files. Bump the version in its folder."
+                exit 1
+              fi
+              echo "$tag: already released, unchanged"
+            else
+              id=${tag%-v*}
+              gh release create "$tag" "$file" --title "$tag" --notes "Add-on $id, version ${tag##*-v}. Install it from Tessera: Settings > Add-ons > Get add-ons." --latest=false
+              echo "$tag: released"
+            fi
+          done < /tmp/packages
+      - name: Commit catalog.json
+        run: |
+          if git diff --quiet -- catalog.json; then echo "catalog.json unchanged"; exit 0; fi
+          git config user.name github-actions; git config user.email github-actions@users.noreply.github.com
+          git add catalog.json
+          git commit -m "catalog: $(node -e 'console.log(require("./catalog.json").addons.map(a=>a.id+" "+a.version).join(", "))')"
+          git push
