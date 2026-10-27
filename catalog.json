@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "addons": [
+    {
+      "id": "xbox",
+      "kind": "shard",
+      "name": "Xbox and Game Pass",
+      "version": "0.1.0",
+      "author": "Tessera",
+      "description": "Which ways of playing Xbox and Game Pass games this machine can do (on Linux, in the cloud, streamed, in a Windows VM, or Windows on its own drive), what each still needs, and Xbox Cloud Gaming in one press.",
+      "url": "https://github.com/Herbalchemist/tessera-addons/releases/download/xbox-v0.1.0/xbox-0.1.0.tar.gz",
+      "sha256": "a7961e7faa5a6416b5363f5044dbf945a339fca2cdaf084d8b98af56a0f4cf24",
+      "size": 9602
+    }
+  ]
+}
