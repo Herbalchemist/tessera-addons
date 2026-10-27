@@ -28,14 +28,15 @@ const MAX_TOTAL_BYTES = 32 * 1024 * 1024; // 32 MB per add-on
 
 // Every file in the folder (not just the manifest), sorted, hashed together — so moving,
 // renaming or editing anything at all inside changes the result. The signature file itself is
-// excluded (it can't sign itself). Symlinks are never followed, so nothing outside the folder
-// can sneak into what gets hashed.
+// excluded (it can't sign itself). A link anywhere inside means "not Official": it isn't part of
+// what was signed, yet code could load through it (require('./lib/x') finds a link named lib/x
+// before the signed lib/x.js), so a signed folder must be plain files and folders only.
 function listFiles(dir, base, out, depth) {
   if (depth > 8) throw new Error('too deep');
   let entries;
   try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
   for (const e of entries) {
-    if (e.isSymbolicLink()) continue;
+    if (e.isSymbolicLink()) throw new Error(`it has a link in it (${base ? `${base}/${e.name}` : e.name})`);
     const full = path.join(dir, e.name);
     const rel = base ? `${base}/${e.name}` : e.name;
     if (e.isDirectory()) { listFiles(full, rel, out, depth + 1); continue; }
@@ -72,7 +73,7 @@ function computeAddonHash(dir) {
 function verifyAddon(dir) {
   let hash;
   try { hash = computeAddonHash(dir); }
-  catch (e) { return { official: false, reason: `couldn't read it (${e.message})` }; }
+  catch (e) { return { official: false, reason: /^it has a link/.test(e.message) ? e.message : `couldn't read it (${e.message})` }; }
   let sig;
   try { sig = JSON.parse(fs.readFileSync(path.join(dir, SIG_FILE), 'utf8')); }
   catch { return { official: false, reason: 'no addon.sig' }; }
