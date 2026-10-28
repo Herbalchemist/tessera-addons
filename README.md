@@ -25,7 +25,8 @@ but nobody vouches for it, and it would run with Tessera's own access to your de
 Add-ons › Shards › Shard safety** decides whether unverified shards may run at all.
 
 The signing key is kept offline by the project's owner. It is never in this repository, in a GitHub
-secret, or in CI.
+secret, or in CI. Keep it with a passphrase on it (`node tools/protect-key.cjs /path/to/key.pem` makes
+a protected copy; `sign.cjs` then asks for the passphrase), and keep two copies in different places.
 
 ## What's in this repository
 
@@ -39,6 +40,7 @@ addons/<id>/          one folder per add-on, exactly as it is installed
 test/                 tests (not shipped in packages)
 tools/build.cjs       packs addons/ into dist/*.tar.gz and writes catalog.json
 tools/sign.cjs        signs an add-on, on your own computer only
+tools/protect-key.cjs puts a passphrase on the signing key
 tools/check.cjs       checks everything (GitHub runs it on every push)
 tools/lib/            Tessera's own packing and signature code, kept identical to Tessera's
 ```
