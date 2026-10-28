@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 'use strict';
-// Xbox and Game Pass for Tessera: which ways of playing them this machine can really do, what each
+// Xbox PC Games Setup for Tessera: which ways of playing Xbox PC games this machine can really do, what each
 // one still needs, and a one-press start for the ones that need nothing else.
 //
 // It only looks (processor, memory, graphics, IOMMU groups, drives, installed programs); it changes
@@ -59,7 +59,7 @@ module.exports = {
   activate(tessera) {
     let last = null;
     tessera.addPanel({
-      title: 'Xbox and Game Pass',
+      title: 'Xbox PC Games Setup',
       async render() {
         last = await look();
         const { caps, rec } = last;

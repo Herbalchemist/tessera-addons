@@ -1,7 +1,9 @@
-# Xbox and Game Pass (a Tessera shard)
+# Xbox PC Games Setup (a Tessera shard)
 
-Shows which ways of playing Xbox and Game Pass games this machine can really do, easiest first, and
-what each one still needs:
+Helps you set up software to play Xbox PC games you own on Tessera. It shows which ways this machine
+can really do it, easiest first, and what each one still needs. You need your own games and accounts;
+this add-on is not made by or affiliated with Microsoft, and it doesn't come with any games or
+subscription.
 
 - **Xbox PC games on Linux** through [Xodus Nexus](https://github.com/domsvoboda/xodus-nexus) (a young
   community project: only some games work). Games it adds to Steam show up in Tessera's own

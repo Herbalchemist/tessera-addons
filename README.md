@@ -6,7 +6,7 @@ Get add-ons**, and you pick what you want.
 
 | Add-on | Kind | What it does |
 |---|---|---|
-| [Xbox and Game Pass](addons/xbox) | Shard | Shows which ways of playing Xbox and Game Pass games this machine can do (Xodus Nexus on Linux, Xbox Cloud Gaming, streaming from a PC or Xbox, a Windows VM with its own graphics chip, Windows on its own drive), what each one still needs, and opens Xbox Cloud Gaming in one press. It only looks; it changes nothing. |
+| [Xbox PC Games Setup](addons/xbox) | Shard | Helps you set up software to play Xbox PC games you own: which ways this machine can do it (Xodus Nexus on Linux, Xbox Cloud Gaming, streaming from a PC or Xbox, a Windows VM with its own graphics chip, Windows on its own drive), what each one still needs, and Xbox Cloud Gaming in one press. It only looks; it changes nothing. You need your own games and accounts; not made by or affiliated with Microsoft. |
 
 ## Installing one
 
