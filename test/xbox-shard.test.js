@@ -39,7 +39,7 @@ const fitsTessera = (v) => {
 test('activate adds one page and says so in the log', () => {
   const { panels, logs } = start();
   assert.strictEqual(panels.length, 1);
-  assert.strictEqual(panels[0].title, 'Xbox and Game Pass');
+  assert.strictEqual(panels[0].title, 'Xbox PC Games Setup');
   assert.deepStrictEqual(logs, ['ready']);
 });
 

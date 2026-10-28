@@ -1,9 +1,11 @@
 {
   "id": "xbox",
-  "name": "Xbox and Game Pass",
+  "name": "Xbox PC Games Setup",
   "author": "Tessera",
-  "version": "0.1.0",
-  "description": "Which ways of playing Xbox and Game Pass games this machine can do (on Linux, in the cloud, streamed, in a Windows VM, or Windows on its own drive), what each still needs, and Xbox Cloud Gaming in one press.",
+  "version": "0.2.0",
+  "description": "Set up software to play Xbox PC games you own. Not made by or affiliated with Microsoft; you need your own games and accounts. Shows which ways this machine can do it (Linux, cloud, streaming, a Windows VM, Windows on its own drive) and what each still needs.",
   "entry": "index.js",
-  "tessera": { "api": 1 }
+  "tessera": {
+    "api": 1
+  }
 }

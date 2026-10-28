@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 'use strict';
-// Which ways of playing Xbox / Game Pass games this machine can really do.
+// Which ways of playing Xbox PC games this machine can really do.
 //
 // Reads /proc and /sys and looks for programs; it changes nothing. The pieces are plain
 // functions so they can be tried against made-up machines:
@@ -261,7 +261,7 @@ function recommend(c) {
     const r = { id: 'linux-xbox', title: 'Xbox PC games on Linux (no Windows)', speed: 'full', effort: 1, needs: [], note: null };
     if (c.arch !== 'x64') { r.status = 'no'; r.why = 'The Xbox runtime for Linux is only built for 64-bit Intel/AMD processors.'; }
     else if (c.tools.xodus) { r.status = 'ready'; r.effort = 0; r.why = 'Installed. Runs at full speed on any graphics chip Tessera supports.'; }
-    else if (c.tools.steam) { r.status = 'setup'; r.why = 'Runs Game Pass PC games through Proton at full speed, on any graphics chip Tessera supports.'; r.needs.push('Install Xodus Nexus and sign in with your Microsoft account'); }
+    else if (c.tools.steam) { r.status = 'setup'; r.why = 'Runs Xbox PC games you own through Proton at full speed, on any graphics chip Tessera supports.'; r.needs.push('Install Xodus Nexus and sign in with your Microsoft account'); }
     else { r.status = 'setup'; r.why = 'Needs the Steam client (the normal one, not the Flatpak) for its runtime.'; r.needs.push('Install Steam, then Xodus Nexus'); r.effort = 2; }
     r.note = 'A young community project: only some games work, you need your own licence, and Microsoft may object to it.';
     add(r);
@@ -273,7 +273,7 @@ function recommend(c) {
     r.status = c.tools.browser ? 'ready' : 'setup';
     r.why = 'Works on every machine that can show video. Nothing is installed on your drives.';
     if (!c.tools.browser) { r.needs.push('A Chrome-based browser (Chrome, Edge or Chromium)'); }
-    r.note = 'Needs internet and a Game Pass plan that includes cloud gaming. Not every game is offered.';
+    r.note = 'Needs internet and your own subscription that includes cloud gaming. Not every game is offered.';
     add(r);
   }
 
@@ -341,7 +341,7 @@ function recommend(c) {
 function describe(c, rec) {
   const gb = (m) => `${Math.round(m / 1024)} GB`;
   const lines = [];
-  lines.push('Ways to play Xbox and Game Pass games on this machine');
+  lines.push('Ways to play Xbox PC games on this machine');
   lines.push('');
   lines.push(`Machine: ${[c.machine.vendor, c.machine.product].filter(Boolean).join(' ') || 'unknown'}${c.handheld ? ' (handheld)' : ''}`);
   lines.push(`Processor: ${c.cpu.model || 'unknown'}, ${c.cpu.cores} cores / ${c.cpu.threads} threads; virtualization ${c.cpu.virt ? 'on' : 'off or missing'}${c.kvm ? '' : ' (no /dev/kvm)'}`);
