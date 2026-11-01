@@ -16,7 +16,7 @@ const crypto = require('crypto');
 // rotation still verify.
 const PUBLIC_KEYS = {
   'tessera-2026': `-----BEGIN PUBLIC KEY-----
-MCowBQYDK2VwAyEAUU0NUB6oqPMPLe1rkBnsaJAY7ttP6N3yDL6fl0ezuuY=
+MCowBQYDK2VwAyEAgL2OUhOgZQcziUIRiviaMhwst46B8WsOPdZ1/VXuIFU=
 -----END PUBLIC KEY-----
 `,
 };
