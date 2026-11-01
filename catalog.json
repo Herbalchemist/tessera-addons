@@ -5,12 +5,12 @@
       "id": "xbox",
       "kind": "shard",
       "name": "Xbox PC Games Setup",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "author": "Tessera",
       "description": "Set up software to play Xbox PC games you own. Not made by or affiliated with Microsoft; you need your own games and accounts. Shows which ways this machine can do it (Linux, cloud, streaming, a Windows VM, Windows on its own drive) and what each still needs.",
-      "url": "https://github.com/Herbalchemist/tessera-addons/releases/download/xbox-v0.2.0/xbox-0.2.0.tar.gz",
-      "sha256": "aff0c67dae60847fbb023682185b514f2bdb23be65eb220c65e7c77b0fd127d3",
-      "size": 9691
+      "url": "https://github.com/Herbalchemist/tessera-addons/releases/download/xbox-v0.2.1/xbox-0.2.1.tar.gz",
+      "sha256": "78a40572d86243669a0fecf24f14fb54b1868c35e21bb83faea9d9367073f628",
+      "size": 9851
     }
   ]
 }
