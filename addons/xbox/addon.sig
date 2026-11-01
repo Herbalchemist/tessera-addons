@@ -1,5 +1,5 @@
 {
   "alg": "ed25519",
   "keyId": "tessera-2026",
-  "sig": "WXtxiPUh1Dt3oH3Z9Hs1dRLAdUmNT8XRB5kVOIpg9nU1CWEKqC7sBpNSZ1xBDVpQ20xd3zvHUzbiKtBZI2vgDQ=="
+  "sig": "1xp+eUZSqTh/ImwctwQdw2gECxdJxWSZA7W/1CAm6PNk4a5BLOFqC2fq2LDXloz3TTLyC27fgJ6+tUQSasgIAQ=="
 }

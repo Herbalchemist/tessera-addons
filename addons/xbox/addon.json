@@ -2,7 +2,7 @@
   "id": "xbox",
   "name": "Xbox PC Games Setup",
   "author": "Tessera",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Set up software to play Xbox PC games you own. Not made by or affiliated with Microsoft; you need your own games and accounts. Shows which ways this machine can do it (Linux, cloud, streaming, a Windows VM, Windows on its own drive) and what each still needs.",
   "entry": "index.js",
   "tessera": {
