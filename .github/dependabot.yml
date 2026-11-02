@@ -1,0 +1,7 @@
+# Dependabot keeps the workflows' actions up to date (the tools here use Node's own modules only).
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
