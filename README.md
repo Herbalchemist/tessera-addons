@@ -6,7 +6,7 @@ Get add-ons**, and you pick what you want.
 
 | Add-on | Kind | What it does |
 |---|---|---|
-| [Xbox PC Games Setup](addons/xbox) | Shard | Helps you set up software to play Xbox PC games you own: which ways this machine can do it (Xodus Nexus on Linux, Xbox Cloud Gaming, streaming from a PC or Xbox, a Windows VM with its own graphics chip, Windows on its own drive), what each one still needs, and Xbox Cloud Gaming in one press. It only looks; it changes nothing. You need your own games and accounts; not made by or affiliated with Microsoft. |
+| [Xbox PC Games Setup](addons/xbox) | Shard | Helps you set up software to play Xbox PC games you own: which ways this machine can do it (Xodus Nexus on Linux, Xbox Cloud Gaming, streaming from a PC or Xbox, a Windows VM with its own graphics chip, Windows on its own drive), what each one still needs, Xbox Cloud Gaming in one press, and your Xodus Nexus games in **Find games** (kept behind Tessera's PIN). It only looks; it changes nothing. You need your own games and accounts; not made by or affiliated with Microsoft. |
 
 ## Installing one
 
@@ -82,6 +82,10 @@ module.exports = {
     } });
     tessera.log('started'); // a line in Tessera's log folder (shards.log)
     // tessera.dataDir: a folder of its own; tessera.tesseraVersion; tessera.id
+    // tessera.features: what this Tessera supports beyond API 1. With 'xbox-pin' listed, an offer
+    // marked xbox: true is an Xbox game: Tessera offers it only while Xbox games are allowed
+    // (a PIN set, Settings > PIN > Allow Xbox games) and asks for the PIN to start it. Without it,
+    // don't offer Xbox games at all: an older Tessera would treat them as ordinary games.
   },
   deactivate() {}, // optional: when it's turned off
 };
