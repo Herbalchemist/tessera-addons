@@ -1,0 +1,7 @@
+This repository holds Tessera's add-on catalog, the add-ons, and the tools that package and sign them.
+Pay particular attention to:
+- The signing key must never be committed or used in CI; signing happens offline (tools/sign.cjs).
+- Packaging (tools/build.cjs, tools/lib/addon-package.js) must refuse links, unsafe names, hidden
+  files and oversized content; catalog.json entries must carry the right SHA-256.
+- Add-on code (addons/*) runs on people's machines: flag network access, shell commands, file
+  access outside what the add-on says it does, and anything that could run as root.

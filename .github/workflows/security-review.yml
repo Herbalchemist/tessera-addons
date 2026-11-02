@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Claude reviews every pull request for security problems and comments on the lines it finds them
+# in (anthropics/claude-code-security-review). Needs the repository secret CLAUDE_API_KEY (an
+# Anthropic API key with Claude Code enabled); without it the review is skipped, not failed.
+# Pull requests from other people's copies of the repository get no secrets, so they are never
+# reviewed with the key: the action is not hardened against prompt injection, which is also why
+# Settings > Actions > "Require approval for all external contributors" should stay on.
+name: Security review
+on:
+  pull_request:
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  review:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    env:
+      HAS_KEY: ${{ secrets.CLAUDE_API_KEY != '' }}
+    steps:
+      - name: No API key yet
+        if: env.HAS_KEY != 'true'
+        run: 'echo "::notice::Security review skipped. Add the CLAUDE_API_KEY repository secret to turn it on."'
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        if: env.HAS_KEY == 'true'
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+      - uses: anthropics/claude-code-security-review@0c6a49f1fa56a1d472575da86a94dbc1edb78eda # main, 2026-11
+        if: env.HAS_KEY == 'true'
+        with:
+          comment-pr: true
+          claude-api-key: ${{ secrets.CLAUDE_API_KEY }}
+          custom-security-scan-instructions: .github/security-review-instructions.txt
