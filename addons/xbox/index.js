@@ -4,13 +4,20 @@
 // one still needs, and a one-press start for the ones that need nothing else.
 //
 // It only looks (processor, memory, graphics, IOMMU groups, drives, installed programs); it changes
-// nothing on the machine. Games added to Steam by Xodus Nexus are found by Tessera's own scan
-// (Settings > Find games), so nothing here has to list them.
+// nothing on the machine.
+//
+// It also finds the games made with Xodus Nexus (its "Create shortcut" and "Add to Steam") for
+// Settings > Find games, marked as Xbox games. Tessera keeps those behind the PIN: they're offered
+// only while a PIN is set and Settings > PIN > Allow Xbox games is on, and starting one asks for the
+// PIN. A Tessera too old to do that (no 'xbox-pin' in tessera.features) gets no games from here.
 
 const fs = require('fs');
 const path = require('path');
 const { execFile } = require('child_process');
+const os = require('os');
 const routes = require('./lib/xbox-routes');
+const nexus = require('./lib/nexus');
+const steamShortcuts = require('./lib/steam-shortcuts');
 
 const CLOUD_URL = 'https://www.xbox.com/play';
 const XODUS_URL = 'https://github.com/domsvoboda/xodus-nexus';
@@ -27,6 +34,36 @@ async function look() {
   // Tessera's own browser is Chromium-based, so it counts as one (see the note on the cloud route).
   if (!caps.tools.browser) caps.tools.browser = 'tessera';
   return { caps, rec: routes.recommend(caps) };
+}
+
+// ------------------------------------------------------------ Xodus Nexus games
+const isDir = (p) => { try { return fs.statSync(p).isDirectory(); } catch { return false; } };
+// Steam itself, else its Flatpak (as Tessera starts it), quietly, so Big Picture doesn't take over.
+function steamLauncher(home) {
+  if (fs.existsSync('/usr/bin/steam')) return { file: '/usr/bin/steam', pre: [] };
+  if (fs.existsSync('/usr/bin/flatpak') && isDir(path.join(home, '.var', 'app', 'com.valvesoftware.Steam'))) return { file: '/usr/bin/flatpak', pre: ['run', 'com.valvesoftware.Steam'] };
+  return null;
+}
+// Where Nexus puts its desktop entries: the applications folder and the desktop.
+const desktopDirs = (home) => [path.join(process.env.XDG_DATA_HOME || path.join(home, '.local', 'share'), 'applications'), path.join(home, 'Desktop')];
+
+// Every Nexus game, once: from its desktop entries, then the ones that only have a Steam shortcut.
+function nexusGames(home = os.homedir(), steam = steamLauncher(home)) {
+  const out = [];
+  const seen = new Set();
+  for (const g of nexus.findGames(desktopDirs(home))) {
+    seen.add(g.id);
+    if (g.title) out.push({ title: g.title, kind: 'game', file: g.file, args: g.args });
+  }
+  if (steam) {
+    for (const s of steamShortcuts.read(home)) {
+      const nx = !s.hidden && nexus.fromSteamOptions(s.options);
+      if (!nx || nx.kind !== 'game' || seen.has(nx.id)) continue; // the Nexus launcher's own entry is not a game
+      seen.add(nx.id);
+      out.push({ title: s.name, kind: 'game', file: steam.file, args: [...steam.pre, '-silent', `steam://rungameid/${s.launchId}`] });
+    }
+  }
+  return out;
 }
 
 function summary(caps, rec) {
@@ -56,8 +93,24 @@ function routeView(r) {
 }
 
 module.exports = {
+  nexusGames, // for the tests
   activate(tessera) {
     let last = null;
+    const gate = Array.isArray(tessera.features) && tessera.features.includes('xbox-pin');
+    if (gate) {
+      tessera.addLibrarySource({
+        name: 'Xbox (Nexus)',
+        scan(offer) { for (const g of nexusGames()) offer({ ...g, xbox: true }); },
+      });
+    }
+    const nexusRows = () => {
+      if (!gate) return [{ label: 'Xbox games from Xodus Nexus', sub: "Update Tessera to add them: this version can't keep them behind the PIN" }];
+      let n = 0;
+      try { n = nexusGames().length; } catch { /* nothing readable */ }
+      const rows = [{ label: 'Xbox games from Xodus Nexus', sub: `${n} found. Add them in Settings > Find games, once Settings > PIN > Allow Xbox games is on.` }];
+      if (nexus.running()) rows.push({ label: 'Xodus Nexus is open', sub: 'Close it (also from the tray) before starting an Xbox game from Tessera: a second start only hands over to it.' });
+      return rows;
+    };
     tessera.addPanel({
       title: 'Xbox PC Games Setup',
       async render() {
@@ -65,6 +118,7 @@ module.exports = {
         const { caps, rec } = last;
         const items = rec.routes.map((r) => ({ label: r.title, sub: STATUS[r.status], action: `route:${r.id}` }));
         if (rec.routes.some((r) => r.id === 'cloud' && r.status !== 'no')) items.push({ label: 'Play Xbox Cloud Gaming now', sub: 'in Tessera\'s browser', action: 'cloud' });
+        items.push(...nexusRows());
         items.push({ label: 'Save a report', sub: 'for a bug report', action: 'report' });
         return { body: summary(caps, rec), items };
       },

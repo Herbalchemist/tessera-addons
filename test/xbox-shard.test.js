@@ -47,7 +47,7 @@ test('the page lists every route, then the shortcuts, all within what Tessera sh
   const [p] = start().panels;
   const v = await p.render();
   fitsTessera(v);
-  const routes = v.items.filter((i) => i.action.startsWith('route:')).map((i) => i.action.slice(6)).sort();
+  const routes = v.items.filter((i) => (i.action || "").startsWith('route:')).map((i) => i.action.slice(6)).sort();
   assert.deepStrictEqual(routes, ['cloud', 'dual-boot', 'linux-xbox', 'stream', 'vm-gpu']);
   assert.ok(v.items.some((i) => i.action === 'cloud'), "Tessera's browser counts, so cloud gaming is offered");
   assert.match(v.body, /Easiest to start/);
@@ -56,7 +56,7 @@ test('the page lists every route, then the shortcuts, all within what Tessera sh
 test('each route opens a page of its own; links open in the browser; a report is saved', async () => {
   const [p] = start().panels;
   const v = await p.render();
-  for (const it of v.items.filter((i) => i.action.startsWith('route:'))) {
+  for (const it of v.items.filter((i) => (i.action || "").startsWith('route:'))) {
     const d = await p.action(it.action);
     fitsTessera(d);
     assert.ok(d.items.length > 0);
@@ -76,7 +76,7 @@ test('each route opens a page of its own; links open in the browser; a report is
 test('a route that can\'t work here never says nothing else is needed', async () => {
   const [p] = start().panels;
   const v = await p.render();
-  for (const it of v.items.filter((i) => i.action.startsWith('route:'))) {
+  for (const it of v.items.filter((i) => (i.action || "").startsWith('route:'))) {
     if (it.sub !== 'Not possible here') continue;
     const d = await p.action(it.action);
     assert.ok(!d.items.some((x) => x.label === 'Nothing else is needed'), it.label);
